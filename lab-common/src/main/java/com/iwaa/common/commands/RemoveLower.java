@@ -13,7 +13,7 @@ public class RemoveLower extends Command {
     }
 
     @Override
-    public Object[] readArgs(Object[] args) {
+    public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         try {
             RouteCreator routeCreator = new RouteCreator();
             Route comparedRoute = routeCreator.createRoute();
@@ -25,9 +25,9 @@ public class RemoveLower extends Command {
     }
 
     @Override
-    public CommandResult execute(Object[] args) {
-        int collectionLen = CommandAdmin.getCollectionAdmin().getCollection().size();
-        CommandAdmin.getCollectionAdmin().getCollection().removeIf(route -> route.compareTo((Route) args[0]) < 0);
-        return new CommandResult((collectionLen - CommandAdmin.getCollectionAdmin().getCollection().size()) + " object(s) was deleted.");
+    public CommandResult execute(Object[] args, CommandAdmin commandAdmin) {
+        int collectionLen = commandAdmin.getCollectionAdmin().getCollection().size();
+        commandAdmin.getCollectionAdmin().getCollection().removeIf(route -> route.compareTo((Route) args[0]) < 0);
+        return new CommandResult((collectionLen - commandAdmin.getCollectionAdmin().getCollection().size()) + " object(s) was deleted.");
     }
 }

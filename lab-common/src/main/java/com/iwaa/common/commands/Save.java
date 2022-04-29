@@ -9,13 +9,13 @@ public class Save extends Command {
     }
 
     @Override
-    public Object[] readArgs(Object[] args) {
+    public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         return new Object[0];
     }
 
     @Override
-    public CommandResult execute(Object[] args) {
-        if (CommandAdmin.getCollectionAdmin().write()) {
+    public CommandResult execute(Object[] args, CommandAdmin commandAdmin) {
+        if (commandAdmin.getCollectionAdmin().write()) {
             return new CommandResult("Saved successfully!");
         }
         return new CommandResult("There is wrong filename on server, or there is no permissions");

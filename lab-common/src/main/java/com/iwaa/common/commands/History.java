@@ -12,16 +12,16 @@ public class History extends Command {
     }
 
     @Override
-    public Object[] readArgs(Object[] args) {
+    public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         return new Object[0];
     }
 
     @Override
-    public CommandResult execute(Object[] args) {
-        if (CommandAdmin.getCommandHistory().isEmpty()) {
+    public CommandResult execute(Object[] args, CommandAdmin commandAdmin) {
+        Queue<String> history = commandAdmin.getCommandHistory();
+        if (history.isEmpty()) {
             return new CommandResult("History is empty.");
         } else {
-            Queue<String> history = CommandAdmin.getCommandHistory();
             return new CommandResult("The last 11 commands were:\n" + history.stream().
                     limit(history.size() - 1).
                     collect(Collectors.joining("\n")));

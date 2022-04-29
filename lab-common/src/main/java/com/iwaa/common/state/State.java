@@ -2,16 +2,16 @@ package com.iwaa.common.state;
 
 public final class State {
 
-    private static boolean performanceStatus = true;
+    private boolean performanceStatus = true;
 
-    private State() {
+    public State() {
     }
 
-    public static boolean getPerformanceStatus() {
+    public boolean getPerformanceStatus() {
         return performanceStatus;
     }
 
-    public static void switchPerformanceStatus() {
+    public void switchPerformanceStatus() {
         performanceStatus = !performanceStatus;
     }
 }

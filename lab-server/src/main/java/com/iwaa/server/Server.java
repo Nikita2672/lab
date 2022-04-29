@@ -1,8 +1,8 @@
 package com.iwaa.server;
 
-import com.iwaa.common.controllers.CollectionAdmin;
 import com.iwaa.common.controllers.CommandListener;
 import com.iwaa.common.controllers.CommandAdmin;
+import com.iwaa.common.state.State;
 import com.iwaa.server.collection.CollectionAdminImpl;
 import com.iwaa.server.config.IOConfigurator;
 
@@ -15,15 +15,20 @@ public final class Server {
     }
 
     public static void main(String[] args) {
-        if (IOConfigurator.configure()) {
-            CollectionAdmin collectionAdmin = CollectionAdminImpl.configFromFile(IOConfigurator.COLLECTION_FILE_READER,
-                    IOConfigurator.getInputFile());
-            CommandAdmin.setCollectionAdmin(collectionAdmin);
+        IOConfigurator ioConfigurator = new IOConfigurator();
+        if (ioConfigurator.configure()) {
+            CollectionAdminImpl collectionAdmin = CollectionAdminImpl.configFromFile(IOConfigurator.COLLECTION_FILE_READER,
+                    ioConfigurator.getInputFile());
+            collectionAdmin.setIoConfigurator(ioConfigurator);
+            CommandAdmin commandAdmin = new CommandAdmin();
+            commandAdmin.setCollectionAdmin(collectionAdmin);
             try {
-                ServerConnectAdmin serverConnectAdmin = new ServerConnectAdmin();
-                Thread commandListenerThread = new Thread(new CommandListener());
+                State state = new State();
+                ServerConnectAdminImpl serverConnectAdminImpl = new ServerConnectAdminImpl(commandAdmin, state);
+                commandAdmin.setServerConnectAdmin(serverConnectAdminImpl);
+                Thread commandListenerThread = new Thread(new CommandListener(commandAdmin, state));
                 commandListenerThread.start();
-                serverConnectAdmin.run();
+                serverConnectAdminImpl.run();
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }

@@ -1,5 +1,6 @@
 package com.iwaa.common.commands;
 
+import com.iwaa.common.controllers.CommandAdmin;
 import com.iwaa.common.controllers.CommandListener;
 import com.iwaa.common.network.CommandResult;
 
@@ -9,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ExecuteScript extends Command {
-    private static final Set<String> FILE_HISTORY = new HashSet<>();
+    private final Set<String> fileHistory = new HashSet<>();
 
     public ExecuteScript() {
         super("execute_script", "считать и исполнить скрипт из указанного файла."
@@ -18,24 +19,24 @@ public class ExecuteScript extends Command {
     }
 
     @Override
-    public Object[] readArgs(Object[] args) {
+    public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         return args;
     }
 
     @Override
-    public CommandResult execute(Object[] args) {
+    public CommandResult execute(Object[] args, CommandAdmin commandAdmin) {
         String fileName = (String) args[0];
-        if (FILE_HISTORY.contains(fileName)) {
+        if (fileHistory.contains(fileName)) {
             return new CommandResult("There is a problem: script will loop.");
         } else {
             try {
                 CommandListener listenerFromFile = new CommandListener(new FileReader(fileName));
-                FILE_HISTORY.add(fileName);
+                fileHistory.add(fileName);
                 listenerFromFile.run();
             } catch (IOException e) {
                 return new CommandResult("Wrong opening file");
             }
-            FILE_HISTORY.remove(fileName);
+            fileHistory.remove(fileName);
         }
         return new CommandResult("Exiting from " + fileName);
     }

@@ -11,12 +11,12 @@ public class Help extends Command {
     }
 
     @Override
-    public Object[] readArgs(Object[] args) {
+    public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         return new Object[0];
     }
 
     @Override
-    public CommandResult execute(Object[] args) {
+    public CommandResult execute(Object[] args, CommandAdmin commandAdmin) {
         return new CommandResult(CommandAdmin.getCommands()
                 .values()
                 .stream()

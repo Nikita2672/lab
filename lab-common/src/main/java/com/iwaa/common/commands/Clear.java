@@ -8,13 +8,13 @@ public class Clear extends Command {
     }
 
     @Override
-    public Object[] readArgs(Object[] args) {
+    public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         return new Object[0];
     }
 
     @Override
-    public CommandResult execute(Object[] args) {
-        CommandAdmin.getCollectionAdmin().clear();
+    public CommandResult execute(Object[] args, CommandAdmin commandAdmin) {
+        commandAdmin.getCollectionAdmin().clear();
         return new CommandResult("Your collection was successfully cleared");
     }
 }

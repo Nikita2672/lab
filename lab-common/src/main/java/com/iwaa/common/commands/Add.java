@@ -14,7 +14,7 @@ public class Add extends Command {
     }
 
     @Override
-    public Object[] readArgs(Object[] args) {
+    public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         try {
             RouteCreator routeCreator = new RouteCreator();
             Route routeToAdd = routeCreator.createRoute();
@@ -26,9 +26,9 @@ public class Add extends Command {
     }
 
     @Override
-    public CommandResult execute(Object[] args) {
+    public CommandResult execute(Object[] args, CommandAdmin commandAdmin) {
         Route routeToAdd = (Route) args[0];
-        CommandAdmin.getCollectionAdmin().add(routeToAdd);
+        commandAdmin.getCollectionAdmin().add(routeToAdd);
         return new CommandResult("your Route was successfully added");
     }
 }

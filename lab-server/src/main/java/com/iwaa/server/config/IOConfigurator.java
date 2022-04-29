@@ -10,28 +10,29 @@ import java.io.File;
 public final class IOConfigurator {
     public static final CollectionFileReader<CollectionAdminImpl> COLLECTION_FILE_READER = new Parser();
     public static final CollectionFileWriter<CollectionAdminImpl> COLLECTION_FILE_WRITER = new Parser();
-    private static File inputFile;
-    private static File outputFile;
+    private static final String LOCAL_VARIABLE = "COLLECTION_FILE";
+    private File inputFile;
+    private File outputFile;
 
-    private IOConfigurator() {
+    public IOConfigurator() {
 
     }
 
-    public static File getInputFile() {
+    public File getInputFile() {
         return inputFile;
     }
 
-    public static File getOutputFile() {
+    public File getOutputFile() {
         return outputFile;
     }
 
-    public static boolean configure() {
-        if (System.getenv("COLLECTION_FILE") == null) {
-            System.out.println(("Set your collection file as a COLLECTION_FILE environment variable and restart the app."));
+    public boolean configure() {
+        if (System.getenv(LOCAL_VARIABLE) == null) {
+            System.out.println(("Set your collection file as a " + LOCAL_VARIABLE + " environment variable and restart the app."));
             return false;
         } else {
-            inputFile = new File(System.getenv("COLLECTION_FILE"));
-            outputFile = new File(System.getenv("COLLECTION_FILE"));
+            inputFile = new File(System.getenv(LOCAL_VARIABLE));
+            outputFile = new File(System.getenv(LOCAL_VARIABLE));
         }
         System.out.println("Configured successfully!");
         return true;

@@ -5,13 +5,10 @@ import com.iwaa.common.network.Request;
 import com.iwaa.common.network.CommandResult;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 
 public class ClientNetwork implements NetworkListener {
     private static final int TIMEOUT = 10000;
     private final ConnectionHandler connectionHandler;
-    private final Reader reader = new InputStreamReader(System.in);
 
     public ClientNetwork(ConnectionHandler connectionHandler) {
         this.connectionHandler = connectionHandler;

@@ -20,6 +20,7 @@ import com.iwaa.common.commands.Update;
 import com.iwaa.common.network.NetworkListener;
 import com.iwaa.common.network.Request;
 import com.iwaa.common.network.CommandResult;
+import com.iwaa.common.network.ServerConnectAdmin;
 import com.iwaa.common.util.DataParser;
 
 import java.util.Arrays;
@@ -31,18 +32,16 @@ import java.util.Queue;
 
 public final class CommandAdmin {
     private static final int HISTORY_LENGTH = 12;
-    private static final Queue<String> COMMAND_HISTORY = new LinkedList<>();
     private static final Map<String, Command> CLIENT_COMMANDS = new HashMap<>();
     private static final Map<String, Command> SERVER_COMMANDS = new HashMap<>();
     private static final Map<String, Command> COMMANDS_EXECUTING_WITHOUT_SENDING = new HashMap<>();
-    private static NetworkListener networkListener;
-    private static CollectionAdmin collectionAdmin;
+    private final Queue<String> commandHistory = new LinkedList<>();
+    private NetworkListener networkListener;
+    private CollectionAdmin collectionAdmin;
+    private CommandListener commandListener;
+    private ServerConnectAdmin serverConnectAdmin;
 
-    private CommandAdmin() {
-
-    }
-
-    static {
+    public CommandAdmin() {
         CLIENT_COMMANDS.put("add", new Add());
         CLIENT_COMMANDS.put("add_if_max", new AddIfMax());
         CLIENT_COMMANDS.put("clear", new Clear());
@@ -66,39 +65,55 @@ public final class CommandAdmin {
         COMMANDS_EXECUTING_WITHOUT_SENDING.put("execute_script", new ExecuteScript());
     }
 
-    public static void setCollectionAdmin(CollectionAdmin collectionAdmin) {
-        CommandAdmin.collectionAdmin = collectionAdmin;
+    public ServerConnectAdmin getServerConnectAdmin() {
+        return serverConnectAdmin;
     }
 
-    public static CollectionAdmin getCollectionAdmin() {
+    public Queue<String> getCommandHistory() {
+        return commandHistory;
+    }
+
+    public NetworkListener getNetworkListener() {
+        return networkListener;
+    }
+
+    public CommandListener getCommandListener() {
+        return commandListener;
+    }
+
+    public void setServerConnectAdmin(ServerConnectAdmin serverConnectAdmin) {
+        this.serverConnectAdmin = serverConnectAdmin;
+    }
+
+    public void setCommandListener(CommandListener commandListener) {
+        this.commandListener = commandListener;
+    }
+
+    public CollectionAdmin getCollectionAdmin() {
         return collectionAdmin;
     }
 
-    public static void setNetworkListener(NetworkListener networkListener) {
-        CommandAdmin.networkListener = networkListener;
+    public void setCollectionAdmin(CollectionAdmin collectionAdmin) {
+        this.collectionAdmin = collectionAdmin;
     }
 
-    public static NetworkListener getNetworkListener() {
-        return networkListener;
+    public void setNetworkListener(NetworkListener networkListener) {
+        this.networkListener = networkListener;
     }
 
     public static Map<String, Command> getCommands() {
         return CLIENT_COMMANDS;
     }
 
-    public static Queue<String> getCommandHistory() {
-        return COMMAND_HISTORY;
-    }
-
-    public static void addCommandToHistory(String commandName) {
-        COMMAND_HISTORY.add(commandName);
-        if (COMMAND_HISTORY.size() > HISTORY_LENGTH) {
-            COMMAND_HISTORY.poll();
+    public void addCommandToHistory(String commandName) {
+        commandHistory.add(commandName);
+        if (commandHistory.size() > HISTORY_LENGTH) {
+            commandHistory.poll();
         }
     }
 
-    public static CommandResult onCommandReceived(String inputData) {
-        boolean fromClient = CommandListener.isOnClient();
+    public CommandResult onCommandReceived(String inputData) {
+        boolean fromClient = commandListener.isOnClient();
         Map<String, Command> commands = SERVER_COMMANDS;
         if (fromClient) {
             commands = CLIENT_COMMANDS;
@@ -113,9 +128,9 @@ public final class CommandAdmin {
         return new CommandResult("No such command, call \"help\" to see the list of commands.");
     }
 
-    public static CommandResult processCommand(Command command, String[] rawArgs) {
+    public CommandResult processCommand(Command command, String[] rawArgs) {
         if (rawArgs.length == command.getInlineArgsCount()) {
-            Object[] commandArgs = command.readArgs(rawArgs);
+            Object[] commandArgs = command.readArgs(rawArgs, this);
             if (commandArgs != null) {
                 if (COMMANDS_EXECUTING_WITHOUT_SENDING.containsKey(command.getName())) {
                     return executeCommand(command, commandArgs);
@@ -129,8 +144,8 @@ public final class CommandAdmin {
         return null;
     }
 
-    public static CommandResult executeCommand(Command command, Object[] args) {
-        CommandAdmin.addCommandToHistory(command.getName());
-        return command.execute(args);
+    public CommandResult executeCommand(Command command, Object[] args) {
+        this.addCommandToHistory(command.getName());
+        return command.execute(args, this);
     }
 }

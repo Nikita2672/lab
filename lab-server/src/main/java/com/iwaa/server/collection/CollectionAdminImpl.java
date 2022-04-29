@@ -25,12 +25,16 @@ import java.util.stream.Collectors;
 public class CollectionAdminImpl implements CollectionAdmin {
     private HashSet<Route> routes;
     private ZonedDateTime creationDate;
-
+    private IOConfigurator ioConfigurator;
     private final Set<Long> ids = new HashSet<>();
 
     public CollectionAdminImpl(HashSet<Route> routes) {
         this.routes = routes;
         this.creationDate = ZonedDateTime.now();
+    }
+
+    public void setIoConfigurator(IOConfigurator ioConfigurator) {
+        this.ioConfigurator = ioConfigurator;
     }
 
     public Set<Long> getIds() {
@@ -139,7 +143,7 @@ public class CollectionAdminImpl implements CollectionAdmin {
 
     @Override
     public boolean write() {
-        return IOConfigurator.COLLECTION_FILE_WRITER.write(IOConfigurator.getOutputFile(), this);
+        return IOConfigurator.COLLECTION_FILE_WRITER.write(ioConfigurator.getOutputFile(), this);
     }
 
     @Override

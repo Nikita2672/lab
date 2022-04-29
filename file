@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<myCollection>
+    <Route>
+        <element>
+            <id>2</id>
+            <name>123</name>
+            <distance>2</distance>
+            <date>Fri Apr 29 22:24:05 MSK 2022</date>
+            <coordinates>
+                <x>11.0</x>
+                <y>1.0</y>
+            </coordinates>
+            <from>
+                <x>21</x>
+                <y>1</y>
+                <z>2</z>
+            </from>
+            <to>
+                <x>12</x>
+                <y>12</y>
+                <z>21</z>
+            </to>
+        </element>
+        <element>
+            <id>1</id>
+            <name>12</name>
+            <distance>12</distance>
+            <date>Fri Apr 29 18:55:17 MSK 2022</date>
+            <coordinates>
+                <x>12.0</x>
+                <y>12.0</y>
+            </coordinates>
+            <from>
+                <x>12</x>
+                <y>12</y>
+                <z>12</z>
+            </from>
+            <to>
+                <x>12</x>
+                <y>2112</y>
+                <z>21</z>
+            </to>
+        </element>
+    </Route>
+</myCollection>

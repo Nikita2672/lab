@@ -14,7 +14,7 @@ public class AddIfMax extends Command {
     }
 
     @Override
-    public Object[] readArgs(Object[] args) {
+    public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         try {
             RouteCreator routeCreator = new RouteCreator();
             Route routeToAdd = routeCreator.createRoute();
@@ -27,10 +27,10 @@ public class AddIfMax extends Command {
     }
 
     @Override
-    public CommandResult execute(Object[] args) {
+    public CommandResult execute(Object[] args, CommandAdmin commandAdmin) {
         Route newRoute = (Route) args[0];
-        if (newRoute.compareTo(Collections.max(CommandAdmin.getCollectionAdmin().getCollection())) > 0) {
-            CommandAdmin.getCollectionAdmin().add(newRoute);
+        if (newRoute.compareTo(Collections.max(commandAdmin.getCollectionAdmin().getCollection())) > 0) {
+            commandAdmin.getCollectionAdmin().add(newRoute);
             return new CommandResult("Your element was successfully added");
         } else {
             return new CommandResult("Your element was not max");

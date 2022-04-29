@@ -9,7 +9,7 @@ public class Remove extends Command {
     }
 
     @Override
-    public Object[] readArgs(Object[] args) {
+    public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         try {
             return new Object[]{Long.parseLong((String) args[0])};
         } catch (NumberFormatException e) {
@@ -19,8 +19,8 @@ public class Remove extends Command {
     }
 
     @Override
-    public CommandResult execute(Object[] args) {
-        boolean result = CommandAdmin.getCollectionAdmin().removeById((Long) args[0]);
+    public CommandResult execute(Object[] args, CommandAdmin commandAdmin) {
+        boolean result = commandAdmin.getCollectionAdmin().removeById((Long) args[0]);
         if (result) {
             return new CommandResult("Element with \"" + args[0] + "\" ID was successfully deleted");
         }

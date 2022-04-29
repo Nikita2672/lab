@@ -14,10 +14,10 @@ public class Update extends Command {
     }
 
     @Override
-    public Object[] readArgs(Object[] args) {
+    public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         try {
             long id = Long.parseLong((String) args[0]);
-            CommandResult commandResult = CommandAdmin.getNetworkListener().listen(new Request(new Remove(), new Object[]{id}));
+            CommandResult commandResult = commandAdmin.getNetworkListener().listen(new Request(new Remove(), new Object[]{id}));
             if ("There is no Element with such ID".equals(commandResult.getMessage())) {
                 System.out.println("There is no Route with such ID");
                 return new Object[0];
@@ -35,9 +35,9 @@ public class Update extends Command {
     }
 
     @Override
-    public CommandResult execute(Object[] args) {
+    public CommandResult execute(Object[] args, CommandAdmin commandAdmin) {
         Route updatedRoute = (Route) args[0];
-        CommandAdmin.getCollectionAdmin().addWithId(updatedRoute);
+        commandAdmin.getCollectionAdmin().addWithId(updatedRoute);
         return new CommandResult("Your Route was successfully Updated");
     }
 }

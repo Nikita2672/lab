@@ -9,7 +9,7 @@ public class Filter extends Command {
     }
 
     @Override
-    public Object[] readArgs(Object[] args) {
+    public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         try {
             return new Object[]{Long.parseLong((String) args[0])};
         } catch (NumberFormatException e) {
@@ -19,7 +19,7 @@ public class Filter extends Command {
     }
 
     @Override
-    public CommandResult execute(Object[] args) {
-        return new CommandResult(CommandAdmin.getCollectionAdmin().outFilter((Long) args[0]));
+    public CommandResult execute(Object[] args, CommandAdmin commandAdmin) {
+        return new CommandResult(commandAdmin.getCollectionAdmin().outFilter((Long) args[0]));
     }
 }

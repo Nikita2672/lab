@@ -24,18 +24,6 @@ public class Route implements Comparable<Route>, Serializable {
         this.distance = distance;
     }
 
-    public Route(Long id, String name, Coordinates coordinates,
-                 Location from, Location to,
-                 Long distance) {
-        this.name = name;
-        this.coordinates = coordinates;
-        this.creationDate = new Date();
-        this.from = from;
-        this.to = to;
-        this.distance = distance;
-        this.id = id;
-    }
-
     public Route(String name, Coordinates coordinates,
                  Location from, Location to,
                  Long distance) {
@@ -63,16 +51,6 @@ public class Route implements Comparable<Route>, Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
-    /*public void generateId(CollectionManager myCollection) {
-        for (int i = 1; i < Integer.MAX_VALUE; i++) {
-            if (!myCollection.getIds().contains(i)) {
-                this.id = i;
-                myCollection.getIds().add(i);
-                break;
-            }
-        }
-    }*/
 
     public Coordinates getCoordinates() {
         return coordinates;
@@ -110,7 +88,7 @@ public class Route implements Comparable<Route>, Serializable {
                 return 1;
             }
         } else {
-            Long result = this.getId() - route.getId();
+            long result = this.getId() - route.getId();
             if (result > 0) {
                 return 1;
             } else {

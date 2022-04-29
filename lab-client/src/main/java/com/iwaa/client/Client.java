@@ -2,6 +2,7 @@ package com.iwaa.client;
 
 import com.iwaa.common.controllers.CommandListener;
 import com.iwaa.common.controllers.CommandAdmin;
+import com.iwaa.common.state.State;
 
 public final class Client {
     private Client() {
@@ -9,13 +10,20 @@ public final class Client {
     }
 
     public static void main(String[] args) {
-        ConnectionHandler connectionHandler = new ConnectionHandler();
-        ClientNetwork clientListener = new ClientNetwork(connectionHandler);
-        CommandAdmin.setNetworkListener(clientListener);
-        CommandListener commandListener = new CommandListener();
-        CommandListener.setOnClient();
-        System.out.println("Hello!");
-        connectionHandler.openConnection();
-        commandListener.run();
+        try {
+            State state = new State();
+            ConnectionHandler connectionHandler = new ConnectionHandler();
+            ClientNetwork clientListener = new ClientNetwork(connectionHandler);
+            CommandAdmin commandAdmin = new CommandAdmin();
+            commandAdmin.setNetworkListener(clientListener);
+            CommandListener commandListener = new CommandListener(commandAdmin, state);
+            commandAdmin.setCommandListener(commandListener);
+            commandListener.setOnClient();
+            System.out.println("Hello!");
+            connectionHandler.openConnection();
+            commandListener.run();
+        } catch (NullPointerException e) {
+            e.getMessage();
+        }
     }
 }

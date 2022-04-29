@@ -18,15 +18,19 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 
-public class ServerConnectAdmin implements Runnable {
+public class ServerConnectAdminImpl implements Runnable, com.iwaa.common.network.ServerConnectAdmin {
     private static final int STANDARD_BUFFER_SIZE = 1024;
     private static final int SELECT_DELAY = 1000;
     private final Map<SocketChannel, ByteBuffer> channels = new HashMap<>();
 
     private final Selector selector;
     private final ServerSocketChannel serverChannel;
+    private State state;
+    private CommandAdmin commandAdmin;
 
-    public ServerConnectAdmin() throws IOException {
+    public ServerConnectAdminImpl(CommandAdmin commandAdmin, State state) throws IOException {
+        this.state = state;
+        this.commandAdmin = commandAdmin;
         selector = Selector.open();
         serverChannel = ServerSocketChannel.open();
         while (true) {
@@ -74,8 +78,13 @@ public class ServerConnectAdmin implements Runnable {
         }
     }
 
+    @Override
+    public State getState() {
+        return state;
+    }
+
     public void listen() throws IOException {
-        while (State.getPerformanceStatus()) {
+        while (state.getPerformanceStatus()) {
             SelectionKey key = null;
             try {
                 int numberOfKeys = selector.select(SELECT_DELAY);
@@ -127,7 +136,7 @@ public class ServerConnectAdmin implements Runnable {
 
         if (request != null) {
             channels.put(channel, ByteBuffer.wrap(Serializer.serialize(
-                    CommandAdmin.executeCommand(request.getCommand(), request.getArgs()))));
+                    commandAdmin.executeCommand(request.getCommand(), request.getArgs()))));
             channel.register(selector, SelectionKey.OP_WRITE);
         }
     }

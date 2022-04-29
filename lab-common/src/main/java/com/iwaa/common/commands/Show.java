@@ -9,14 +9,13 @@ public class Show extends Command {
         super("show", "вывести в стандартный поток вывода все элементы коллекции в строковом представлении", 0);
     }
 
-
     @Override
-    public Object[] readArgs(Object[] args) {
+    public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         return new Object[0];
     }
 
     @Override
-    public CommandResult execute(Object[] args) {
-        return new CommandResult(CommandAdmin.getCollectionAdmin().show());
+    public CommandResult execute(Object[] args, CommandAdmin commandAdmin) {
+        return new CommandResult(commandAdmin.getCollectionAdmin().show());
     }
 }

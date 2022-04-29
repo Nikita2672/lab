@@ -10,28 +10,37 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 public class CommandListener implements Runnable {
-    private static boolean onClient;
+    private boolean onClient;
     private final Reader reader;
+    private State state;
+    private CommandAdmin commandAdmin;
 
     public CommandListener(Reader reader) {
         this.reader = reader;
     }
 
-    public CommandListener() {
+    public CommandListener(CommandAdmin commandAdmin, State state) {
         this(new InputStreamReader(System.in));
+        this.state = state;
+        this.commandAdmin = commandAdmin;
+        commandAdmin.setCommandListener(this);
     }
 
-    public static boolean isOnClient() {
+    public State getState() {
+        return state;
+    }
+
+    public boolean isOnClient() {
         return onClient;
     }
 
-    public static void setOnClient() {
-        CommandListener.onClient = true;
+    public void setOnClient() {
+        onClient = true;
     }
 
     public void run() {
         try (BufferedReader in = new BufferedReader(reader)) {
-            while (State.getPerformanceStatus()) {
+            while (state.getPerformanceStatus()) {
                 if (reader.getClass() != FileReader.class) {
                     System.out.println("===========================");
                 }
@@ -40,7 +49,7 @@ public class CommandListener implements Runnable {
                     break;
                 }
                 if (!"".equals(input)) {
-                    CommandResult commandResult = CommandAdmin.onCommandReceived(input);
+                    CommandResult commandResult = commandAdmin.onCommandReceived(input);
                     if (commandResult != null) {
                         commandResult.showResult();
                     }

@@ -1,10 +1,8 @@
 package com.iwaa.common.commands;
 
-import com.iwaa.common.controllers.CommandListener;
 import com.iwaa.common.controllers.CommandAdmin;
 import com.iwaa.common.network.Request;
 import com.iwaa.common.network.CommandResult;
-import com.iwaa.common.state.State;
 
 public class Exit extends Command {
     public Exit() {
@@ -12,19 +10,20 @@ public class Exit extends Command {
     }
 
     @Override
-    public Object[] readArgs(Object[] args) {
+    public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         return new Object[0];
     }
 
     @Override
-    public CommandResult execute(Object[] args) {
-        State.switchPerformanceStatus();
-        if (CommandListener.isOnClient()) {
+    public CommandResult execute(Object[] args, CommandAdmin commandAdmin) {
+        if (commandAdmin.getCommandListener().isOnClient()) {
+            commandAdmin.getCommandListener().getState().switchPerformanceStatus();
             System.out.println("Bye bye");
-            return CommandAdmin.getNetworkListener().listen(new Request(new Save(), new Object[]{}));
+            return commandAdmin.getNetworkListener().listen(new Request(new Save(), new Object[]{}));
         } else {
             System.out.println("Saving...");
-            CommandAdmin.getCollectionAdmin().write();
+            commandAdmin.getCollectionAdmin().write();
+            commandAdmin.getServerConnectAdmin().getState().switchPerformanceStatus();
             return new CommandResult("Shut down.");
         }
     }

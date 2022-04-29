@@ -10,12 +10,12 @@ public class GroupCounting extends Command {
     }
 
     @Override
-    public Object[] readArgs(Object[] args) {
+    public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         return new Object[0];
     }
 
     @Override
-    public CommandResult execute(Object[] args) {
-        return new CommandResult(CommandAdmin.getCollectionAdmin().outputGroupsByDistance());
+    public CommandResult execute(Object[] args, CommandAdmin commandAdmin) {
+        return new CommandResult(commandAdmin.getCollectionAdmin().outputGroupsByDistance());
     }
 }

@@ -2,10 +2,14 @@ package com.iwaa.common.commands;
 
 import com.iwaa.common.controllers.CommandAdmin;
 import com.iwaa.common.controllers.CommandListener;
+import com.iwaa.common.controllers.FileManager;
+import com.iwaa.common.data.RouteCreator;
 import com.iwaa.common.network.CommandResult;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,9 +34,11 @@ public class ExecuteScript extends Command {
             return new CommandResult("There is a problem: script will loop.");
         } else {
             try {
-                CommandListener listenerFromFile = new CommandListener(new FileReader(fileName));
+                File file = new File(fileName);
+                CommandListener listenerFromFile = new CommandListener(new FileReader(fileName), commandAdmin);
                 fileHistory.add(fileName);
-                listenerFromFile.run();
+                listenerFromFile.runFile(file);
+                RouteCreator.setStreamReader(new InputStreamReader(System.in));
             } catch (IOException e) {
                 return new CommandResult("Wrong opening file");
             }

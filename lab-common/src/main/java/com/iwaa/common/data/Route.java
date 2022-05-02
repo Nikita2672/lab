@@ -80,20 +80,10 @@ public class Route implements Comparable<Route>, Serializable {
         if (routeValue == null) {
             routeValue = -1L;
         }
-
-        if (routeValue - thisValue != 0) {
-            if (thisValue - routeValue < 0) {
-                return -1;
-            } else {
-                return 1;
-            }
+        if (thisValue - routeValue < 0) {
+            return -1;
         } else {
-            long result = this.getId() - route.getId();
-            if (result > 0) {
-                return 1;
-            } else {
-                return -1;
-            }
+            return 1;
         }
     }
 

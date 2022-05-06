@@ -21,8 +21,6 @@ public class FileManager {
                 } else {
                     return input;
                 }
-
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -32,13 +30,17 @@ public class FileManager {
         return "";
     }
 
+    public Stack<BufferedReader> getCurrentFilesReaders() {
+        return currentFilesReaders;
+    }
+
+    public Stack<File> getCurrentFiles() {
+        return currentFiles;
+    }
+
     public void connectToFile(File file) throws IOException, UnsupportedOperationException {
-        if (currentFiles.contains(file)) {
-            throw new UnsupportedOperationException("The file was not executed due to recursion");
-        } else {
-            BufferedReader newReader = new BufferedReader(new FileReader(file));
-            currentFiles.push(file);
-            currentFilesReaders.push(newReader);
-        }
+        BufferedReader newReader = new BufferedReader(new FileReader(file));
+        currentFiles.push(file);
+        currentFilesReaders.push(newReader);
     }
 }

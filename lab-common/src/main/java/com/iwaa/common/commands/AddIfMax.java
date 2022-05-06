@@ -5,6 +5,7 @@ import com.iwaa.common.data.Route;
 import com.iwaa.common.data.RouteCreator;
 import com.iwaa.common.network.CommandResult;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
 
@@ -16,7 +17,10 @@ public class AddIfMax extends Command {
     @Override
     public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         try {
-            RouteCreator routeCreator = new RouteCreator();
+            RouteCreator routeCreator = new RouteCreator(commandAdmin.getCommandListener().getReader());
+            if (commandAdmin.getCommandListener().getReader().getClass() == FileReader.class) {
+                routeCreator.setFileManager1(commandAdmin.getCommandListener().getFileManager());
+            }
             Route routeToAdd = routeCreator.createRoute();
             routeToAdd.setId(1L);
             return new Object[]{routeToAdd};
@@ -29,11 +33,16 @@ public class AddIfMax extends Command {
     @Override
     public CommandResult execute(Object[] args, CommandAdmin commandAdmin) {
         Route newRoute = (Route) args[0];
-        if (newRoute.compareTo(Collections.max(commandAdmin.getCollectionAdmin().getCollection())) > 0) {
+        if (!commandAdmin.getCollectionAdmin().getCollection().isEmpty()) {
+            if (newRoute.compareTo(Collections.max(commandAdmin.getCollectionAdmin().getCollection())) > 0) {
+                commandAdmin.getCollectionAdmin().add(newRoute);
+                return new CommandResult("Your element was successfully added");
+            } else {
+                return new CommandResult("Your element was not max");
+            }
+        } else {
             commandAdmin.getCollectionAdmin().add(newRoute);
             return new CommandResult("Your element was successfully added");
-        } else {
-            return new CommandResult("Your element was not max");
         }
     }
 }

@@ -13,9 +13,10 @@ import java.io.Reader;
 
 public class CommandListener implements Runnable {
     private boolean onClient;
-    private final Reader reader;
+    private Reader reader;
     private State state;
     private CommandAdmin commandAdmin;
+    private FileManager fileManager = new FileManager();
 
     public CommandListener(Reader reader, CommandAdmin commandAdmin) {
         this.reader = reader;
@@ -30,8 +31,16 @@ public class CommandListener implements Runnable {
         commandAdmin.setCommandListener(this);
     }
 
+    public FileManager getFileManager() {
+        return fileManager;
+    }
+
     public State getState() {
         return state;
+    }
+
+    public Reader getReader() {
+        return reader;
     }
 
     public boolean isOnClient() {
@@ -66,9 +75,8 @@ public class CommandListener implements Runnable {
 
     public void runFile(File file) {
         try {
-            FileManager fileManager = new FileManager();
             fileManager.connectToFile(file);
-            RouteCreator.setStreamReader(new FileReader(file), fileManager);
+            reader = new FileReader(file);
             while (state.getPerformanceStatus()) {
                 String input = fileManager.nextLine();
                 if (input == null) {
@@ -81,10 +89,10 @@ public class CommandListener implements Runnable {
                     }
                 }
             }
-            RouteCreator.setStreamReader(new InputStreamReader(System.in));
+            reader = new InputStreamReader(System.in);
         } catch (IOException e) {
-            System.out.println("Invalid output");
-            RouteCreator.setStreamReader(new InputStreamReader(System.in));
+            System.out.println("There is no such file or you haven't permissions");
+            reader = new InputStreamReader(System.in);
         }
     }
 }

@@ -15,30 +15,22 @@ public class RouteCreator {
     private static final int MAX_Y = 362;
     private static final int MIN_DISTANCE = 1;
     private static final String ERROR = "Your argument wasn't correct. Please try again!";
-    private static Reader STREAM_READER = new InputStreamReader(System.in);
-    private static FileManager fileManager1;
+    private Reader streamReader;
+    private FileManager fileManager;
 
-    public RouteCreator() {
+    public RouteCreator(Reader reader) {
+        streamReader = reader;
     }
 
-    public static void setStreamReader(Reader streamReader) {
-        STREAM_READER = streamReader;
-    }
-
-    public static void setStreamReader(Reader streamReader, FileManager fileManager) {
-        STREAM_READER = streamReader;
-        fileManager1 = fileManager;
-    }
-
-    public static Reader getStreamReader() {
-        return STREAM_READER;
-    }
-
-    public static Route createRoute() throws IOException {
+    public Route createRoute() throws IOException {
         return askForRoute();
     }
 
-    private static Route askForRoute() throws IOException {
+    public void setFileManager1(FileManager fileManager) {
+        this.fileManager = fileManager;
+    }
+
+    private Route askForRoute() throws IOException {
         String name = createName();
         Long distance = createDistance();
         Coordinates coordinates = createCoordinates();
@@ -47,17 +39,17 @@ public class RouteCreator {
         return new Route(name, coordinates, from, to, distance);
     }
 
-    private static String createName() throws IOException {
+    private String createName() throws IOException {
         return valid(arg -> ((String) arg).length() > 0, "Enter name (String)",
                 ERROR, "The string must not be empry", x -> x, false);
     }
 
-    private static Long createDistance() throws IOException {
+    private Long createDistance() throws IOException {
         return valid(arg -> ((Long) arg) > MIN_DISTANCE, "Enter Distance (Long) > 1 (can't be null)",
                 ERROR, "Distance must be > 1. Try again", Long::parseLong, false);
     }
 
-    private static Coordinates createCoordinates() throws IOException {
+    private Coordinates createCoordinates() throws IOException {
         System.out.println("Enter coordinates");
         float x = valid(arg -> ((Float) arg) <= MAX_X, "Enter x (float) <= 245",
                 ERROR, "x must be <= 245. Try again", Float::parseFloat, false);
@@ -66,7 +58,7 @@ public class RouteCreator {
         return new Coordinates(y, x);
     }
 
-    private static Location createLocation() throws IOException {
+    private Location createLocation() throws IOException {
         System.out.println("Enter location");
         Long x = valid(arg -> true, "Please enter x (Long) can't be null",
                 ERROR, "x mustn't be null", Long::parseLong, false);
@@ -78,7 +70,7 @@ public class RouteCreator {
         return new Location(x, y, z);
     }
 
-    public static <T> T valid(Predicate<Object> predicate,
+    public <T> T valid(Predicate<Object> predicate,
                        String message,
                        String error,
                        String wrong,
@@ -87,20 +79,20 @@ public class RouteCreator {
         System.out.println(message);
         String input;
         T value;
-        BufferedReader in = new BufferedReader(STREAM_READER);
+        BufferedReader in = new BufferedReader(streamReader);
         do {
             try {
-                if (STREAM_READER.getClass() != FileReader.class) {
+                if (streamReader.getClass() != FileReader.class) {
                     input = in.readLine();
                 } else {
-                    input = fileManager1.nextLine();
+                    input = fileManager.nextLine();
                 }
                 if ("".equals(input) && Boolean.TRUE.equals(nullable)) {
                     return null;
                 }
-                if (null == input && STREAM_READER.getClass() == FileReader.class) {
-                    STREAM_READER = new InputStreamReader(System.in);
-                    in = new BufferedReader(STREAM_READER);
+                if (null == input && streamReader.getClass() == FileReader.class) {
+                    streamReader = new InputStreamReader(System.in);
+                    in = new BufferedReader(streamReader);
                     input = in.readLine();
                 }
                 value = function.apply(input);
@@ -113,8 +105,8 @@ public class RouteCreator {
             } else {
                 System.out.println(wrong);
             }
-            if (null == input && STREAM_READER.getClass() == FileReader.class) {
-                STREAM_READER = new InputStreamReader(System.in);
+            if (null == input && streamReader.getClass() == FileReader.class) {
+                streamReader = new InputStreamReader(System.in);
             }
         } while (true);
     }

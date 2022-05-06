@@ -6,6 +6,7 @@ import com.iwaa.common.data.RouteCreator;
 import com.iwaa.common.network.Request;
 import com.iwaa.common.network.CommandResult;
 
+import java.io.FileReader;
 import java.io.IOException;
 
 public class Update extends Command {
@@ -20,9 +21,12 @@ public class Update extends Command {
             CommandResult commandResult = commandAdmin.getNetworkListener().listen(new Request(new Remove(), new Object[]{id}));
             if ("There is no Element with such ID".equals(commandResult.getMessage())) {
                 System.out.println("There is no Route with such ID");
-                return new Object[0];
+                return null;
             }
-            RouteCreator routeCreator = new RouteCreator();
+            RouteCreator routeCreator = new RouteCreator(commandAdmin.getCommandListener().getReader());
+            if (commandAdmin.getCommandListener().getReader().getClass() == FileReader.class) {
+                routeCreator.setFileManager1(commandAdmin.getCommandListener().getFileManager());
+            }
             Route route = routeCreator.createRoute();
             route.setId(id);
             return new Object[]{route};
@@ -31,7 +35,7 @@ public class Update extends Command {
         } catch (NumberFormatException e) {
             System.out.println("Invalid format of id.");
         }
-        return new Object[0];
+        return null;
     }
 
     @Override

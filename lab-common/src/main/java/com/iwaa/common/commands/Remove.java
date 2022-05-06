@@ -15,7 +15,7 @@ public class Remove extends Command {
         } catch (NumberFormatException e) {
             System.out.println("Wrong argument, Please enter integer ID");
         }
-        return new Object[0];
+        return null;
     }
 
     @Override

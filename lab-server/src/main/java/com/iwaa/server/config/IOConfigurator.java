@@ -27,14 +27,12 @@ public final class IOConfigurator {
     }
 
     public boolean configure() {
-        if (System.getenv(LOCAL_VARIABLE) != null) {
+        if (System.getenv(LOCAL_VARIABLE) == null) {
             System.out.println(("Set your collection file as a " + LOCAL_VARIABLE + " environment variable and restart the app."));
             return false;
         } else {
-            /*inputFile = new File(System.getenv(LOCAL_VARIABLE));
-            outputFile = new File(System.getenv(LOCAL_VARIABLE));*/
-            inputFile = new File("C:\\Users\\iwaa0\\IdeaProjects\\Эталон\\lab\\file");
-            outputFile = new File("C:\\Users\\iwaa0\\IdeaProjects\\Эталон\\lab\\file");
+            inputFile = new File(System.getenv(LOCAL_VARIABLE));
+            outputFile = new File(System.getenv(LOCAL_VARIABLE));
         }
         System.out.println("Configured successfully!");
         return true;

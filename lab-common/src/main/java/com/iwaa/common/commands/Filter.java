@@ -13,9 +13,9 @@ public class Filter extends Command {
         try {
             return new Object[]{Long.parseLong((String) args[0])};
         } catch (NumberFormatException e) {
-            System.out.println("Please use (Long) distance");
+            System.out.println("Wrong format Distance");
+            return null;
         }
-        return new Object[0];
     }
 
     @Override

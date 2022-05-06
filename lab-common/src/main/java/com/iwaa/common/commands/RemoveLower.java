@@ -5,6 +5,7 @@ import com.iwaa.common.data.Route;
 import com.iwaa.common.data.RouteCreator;
 import com.iwaa.common.network.CommandResult;
 
+import java.io.FileReader;
 import java.io.IOException;
 
 public class RemoveLower extends Command {
@@ -15,7 +16,10 @@ public class RemoveLower extends Command {
     @Override
     public Object[] readArgs(Object[] args, CommandAdmin commandAdmin) {
         try {
-            RouteCreator routeCreator = new RouteCreator();
+            RouteCreator routeCreator = new RouteCreator(commandAdmin.getCommandListener().getReader());
+            if (commandAdmin.getCommandListener().getReader().getClass() == FileReader.class) {
+                routeCreator.setFileManager1(commandAdmin.getCommandListener().getFileManager());
+            }
             Route comparedRoute = routeCreator.createRoute();
             return new Object[]{comparedRoute};
         } catch (IOException e) {

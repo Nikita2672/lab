@@ -26,7 +26,7 @@ public class RouteCreator {
         return askForRoute();
     }
 
-    public void setFileManager1(FileManager fileManager) {
+    public void setFileManager(FileManager fileManager) {
         this.fileManager = fileManager;
     }
 

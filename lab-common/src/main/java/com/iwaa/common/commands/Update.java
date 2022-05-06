@@ -25,7 +25,7 @@ public class Update extends Command {
             }
             RouteCreator routeCreator = new RouteCreator(commandAdmin.getCommandListener().getReader());
             if (commandAdmin.getCommandListener().getReader().getClass() == FileReader.class) {
-                routeCreator.setFileManager1(commandAdmin.getCommandListener().getFileManager());
+                routeCreator.setFileManager(commandAdmin.getCommandListener().getFileManager());
             }
             Route route = routeCreator.createRoute();
             route.setId(id);

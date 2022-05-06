@@ -1,6 +1,5 @@
 package com.iwaa.common.controllers;
 
-import com.iwaa.common.data.RouteCreator;
 import com.iwaa.common.network.CommandResult;
 import com.iwaa.common.state.State;
 
